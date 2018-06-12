@@ -30,6 +30,11 @@ if [ $2 == "true" ]; then
     sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 fi
 
+      ##  Enable system service
+
+    sudo systemctl enable mariadb.service
+    sudo systemctl start mariadb
+
   ##  Add Root User Privileges
   ##  http://stackoverflow.com/questions/7528967/how-to-grant-mysql-privileges-in-a-bash-script
 if [ $3 == "true" ]; then
@@ -38,7 +43,7 @@ if [ $3 == "true" ]; then
     Q2="FLUSH PRIVILEGES;"
     SQL="${Q1}${Q2}"
     $MYSQL -uroot -p$1 -e "$SQL"
-    service mysql restart
+    service mariadb restart
 fi
 
 echo "MariaDB Installation Ends"
