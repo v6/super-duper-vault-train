@@ -35,6 +35,7 @@ Vagrant.configure("2") do |config|
             server.vm.box = "bento/centos-7.5"
             server.vm.box_version = "201805.15.0"
             server.vm.hostname = "vault#{i}"
+            server.vm.network :private_network, ip: "192.168.13.3#{i}"
             server.vm.provision "shell", path: "account.sh", args: "vault"
             server.vm.provision "shell", path: "account.sh", args: "consul"
             server.vm.provision "shell", path: "prereqs.sh"
@@ -43,7 +44,7 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", path: "consuldownload.sh"
             server.vm.provision "shell", path: "configureconsul.sh"
             server.vm.provision "shell", path: "vaultdownload.sh", args: "0.10.2"
-            server.vm.network :private_network, ip: "192.168.13.3#{i}"
+            server.vm.provision "shell", path: "configurevault.sh"
         end
     end
   # Disable automatic box update checking. If you disable this, then
