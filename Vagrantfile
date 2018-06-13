@@ -38,10 +38,10 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", path: "account.sh", args: "vault"
             server.vm.provision "shell", path: "account.sh", args: "consul"
             server.vm.provision "shell", path: "prereqs.sh"
-            server.vm.provision "shell", path: "configureconsul.sh"
             server.vm.provision "shell", path: "consulsystemd.sh"
             server.vm.provision "shell", path: "vaultsystemd.sh"
             server.vm.provision "shell", path: "consuldownload.sh"
+            server.vm.provision "shell", path: "configureconsul.sh"
             server.vm.provision "shell", path: "vaultdownload.sh", args: "0.10.2"
             server.vm.network :private_network, ip: "192.168.13.3#{i}"
         end
