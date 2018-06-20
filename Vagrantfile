@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
         ##  Install and run DB
       db.vm.provision "shell", path: "account.sh", args: "mariadb"
       db.vm.provision "shell", path: "prereqs.sh"
-      db.vm.provision "shell", path: "mariadb.sh", args: ["errydayimSNUFFLIN", "false", "true"]
+      db.vm.provision "shell", path: "mariadb.sh", args: ["errydayimSNUFFLIN", "true", "false"]
       db.vm.provision "shell", inline: "sudo systemctl enable mariadb.service"
       db.vm.provision "shell", inline: "sudo systemctl start mariadb"
   end

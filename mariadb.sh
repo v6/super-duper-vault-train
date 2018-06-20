@@ -17,18 +17,20 @@ sudo yum check-update
   ##  Auto-set password to avoid prompt while installing MariaDB
   ##  Set username to 'root' and password to 'errydayimSNUFFLIN'
 
-  ##  Install MariaDB
-sudo yum install -y -q -e 0 mariadb-server
-
   ##  Set password for mariadb user
 echo 'errydayimSNUFFLIN' | sudo passwd --stdin mariadb
 
 
   ##  Allow external connections to MariaDB
 if [ $2 == "true" ]; then
+    mkdir -p /etc/mysql
+    touch /etc/mysql/my.cnf
       ##  Set bind addr to allow connections 0.0.0.0
     sed -i "s/bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 fi
+
+  ##  Install MariaDB
+    sudo yum install -y -q -e 0 mariadb-server
 
       ##  Enable system service
 
@@ -38,12 +40,19 @@ fi
   ##  Add Root User Privileges
   ##  http://stackoverflow.com/questions/7528967/how-to-grant-mysql-privileges-in-a-bash-script
 if [ $3 == "true" ]; then
+    
     MYSQL=`which mysql`
     Q1="GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$1' WITH GRANT OPTION;"
     Q2="FLUSH PRIVILEGES;"
     SQL="${Q1}${Q2}"
-    $MYSQL -uroot -p$1 -e "$SQL"
+    $MYSQL -uroot -e "$SQL"
     service mariadb restart
 fi
+
+  ##  Set root password
+    
+MYSQL=`which mysql`
+    SQL="SET PASSWORD FOR 'bob'@'%.loc.gov' = PASSWORD('newpass');"
+    $MYSQL -uroot -e "$SQL"
 
 echo "MariaDB Installation Ends"
