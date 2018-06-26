@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
         config.vm.define "instance#{i}" do |server|
             server.vm.box = "bento/centos-7.5"
             server.vm.box_version = "201805.15.0"
-            server.vm.hostname = "vault#{i}"
+            server.vm.hostname = "instance#{i}"
             server.vm.network :private_network, ip: "192.168.13.3#{i}"
             server.vm.provision "shell", path: "account.sh", args: "vault"
             server.vm.provision "shell", path: "account.sh", args: "consul"
