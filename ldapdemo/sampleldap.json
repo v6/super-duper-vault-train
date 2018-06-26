@@ -1,0 +1,15 @@
+{
+  "binddn": "cn=vault,ou=Users,dc=example,dc=com",
+  "deny_null_bind": true,
+  "discoverdn": false,
+  "groupattr": "cn",
+  "groupdn": "ou=Groups,dc=example,dc=com",
+  "groupfilter": "(\u0026(objectClass=group)(member:1.2.840.113556.1.4.1941:={{.UserDN}}))",
+  "insecure_tls": false,
+  "starttls": false,
+  "tls_max_version": "tls12",
+  "tls_min_version": "tls12",
+  "url": "ldaps://ldap.myorg.com:636",
+  "userattr": "samaccountname",
+  "userdn": "ou=Users,dc=example,dc=com"
+}
