@@ -1,3 +1,6 @@
+  ##  Secrets files
+ldapdemo/secretldap.json*
+
   ##  Vagrant
   ##  https://github.com/hashicorp/vagrant/blob/master/.gitignore
 # OS-specific

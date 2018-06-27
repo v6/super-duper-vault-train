@@ -3,7 +3,7 @@
 
 
 VAULT_ADDR='http://192.168.13.37:8200'
-MOUNT_NAME='ldap3'
+MOUNT_NAME=$1
 
 
 curl -sk \
