@@ -1,6 +1,16 @@
 # super-duper-vault-train
 ▼🚄
 
+# Target Audience
+
+I wrote this for people who, I assume, already know a little about scripting, Git, configuring new SSH connections, installing software, and Virtual Machines, because these are hard to explain and have much better resources elsewhere. 
+
+If you get stuck with the prerequisites, tools to install, or downloading the code, please have a look at the resources on the internet.
+
+Especially for Vagrant, the Getting Started guide takes about 30 minutes once you have Vagrant and Virtualbox installed: https://www.vagrantup.com/intro/getting-started/index.html
+
+If you get an error with Vault working improperly, though, make a Github issue ASAP. 
+
 # OS-Specific Prerequisites
 * MacOS: OSX 10.13 or later  
 * Windows: Windows must have [Powershell 3.0](https://stackoverflow.com/a/32385347/2146138) or later. If you're on Windows 7, I recommend Windows Management Framework 4.0
@@ -9,8 +19,8 @@
 
 ### Install Tools  
 1. Make sure you have [Git](https://git-scm.com/downloads) installed  
-2. Install Vagrant  ([NOTE: NOT COMPATIBLE WITH WINDOWS 7 OR WINDOWS 8](https://blogs.technet.microsoft.com/heyscriptingguy/2013/06/02/weekend-scripter-install-powershell-3-0-on-windows-7/))  
-3. Install VMWare or [Virtualbox](https://www.virtualbox.org/wiki/Downloads)  
+2. Install the *latest* version of Vagrant  ([NOTE: WINDOWS 7 AND WINDOWS 8 REQUIRE POWERSHELL >= 3](https://blogs.technet.microsoft.com/heyscriptingguy/2013/06/02/weekend-scripter-install-powershell-3-0-on-windows-7/))  
+3. Install the *latest* version of VMWare or [Virtualbox](https://www.virtualbox.org/wiki/Downloads)  
 
 ### Download the Code for this  
 
@@ -23,7 +33,7 @@ _Related Vendor Documentation Link: https://help.github.com/articles/cloning-a-r
 _Related Vendor Documentation Link: https://www.vagrantup.com/intro/index.html#why-vagrant-_  
 
 `cd super-duper-vault-train`  
-`vagrant up`  
+`vagrant up`  ##  NOTE: You may have to wait a while for this, and there will be some "connection retry" errors for a long time before a successful connection occurs, because the VM is booting.
 `vagrant status`  
 `vagrant ssh instance5`  
 After you do this, you'll see your command prompt change to show `vagrant`.  
