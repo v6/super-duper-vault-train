@@ -6,14 +6,15 @@ VAULT_ADDR=http://192.168.13.37:8200
   ##  Edit secretldap.json to replace the values for your org.
   ##  Run this script.
 
+MOUNT_NAME='ldap3'
 
-curl \
+curl -sk \
     --header "X-Vault-Token: ${VAULT_TOKEN}" \
     --request POST \
     --data @secretldap.json \
-    "${VAULT_ADDR}/v1/auth/ldap1/config" | jq
+    "${VAULT_ADDR}/v1/auth/${MOUNT_NAME}/config" | jq
 
 
-curl \
+curl -sk \
     --header "X-Vault-Token: ${VAULT_TOKEN}" \
-    "${VAULT_ADDR}/v1/auth/ldap1/config" | jq
+    "${VAULT_ADDR}/v1/auth/${MOUNT_NAME}/config" | jq
