@@ -5,6 +5,9 @@ echo "MariaDB Installation Begins"
 
 [[ -z $1 ]] && { echo "  ##  Error: Set the MariaDB password in the Vagrant file."; exit 1; }
 
+# set password
+MARIADB_PASSWORD=$1
+
 # default version
 MARIADB_VERSION='10.1'
 
@@ -18,7 +21,7 @@ sudo yum check-update
   ##  Set username to 'root' and password to 'errydayimSNUFFLIN'
 
   ##  Set password for mariadb user
-echo 'errydayimSNUFFLIN' | sudo passwd --stdin mariadb
+echo "${MARIADB_PASSWORD}" | sudo passwd --stdin mariadb
 
 
   ##  Allow external connections to MariaDB
@@ -42,7 +45,7 @@ fi
 if [ $3 == "true" ]; then
     
     MYSQL=`which mysql`
-    Q1="GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$1' WITH GRANT OPTION;"
+    Q1="GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '${MARIADB_PASSWORD}' WITH GRANT OPTION;"
     Q2="FLUSH PRIVILEGES;"
     SQL="${Q1}${Q2}"
     $MYSQL -uroot -e "$SQL"
@@ -52,7 +55,11 @@ fi
   ##  Set root password
     
 MYSQL=`which mysql`
-    SQL="SET PASSWORD FOR 'bob'@'%.loc.gov' = PASSWORD('newpass');"
+    SQL="SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MARIADB_PASSWORD}');"
     $MYSQL -uroot -e "$SQL"
+
+  ##  Allow root to connect from outside this location
+SQL="CREATE USER 'root'@'%' IDENTIFIED BY '${MARIADB_PASSWORD}'; GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';"
+$MYSQL -uroot -p$MARIADB_PASSWORD -e "$SQL"
 
 echo "MariaDB Installation Ends"
