@@ -10,28 +10,11 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-
-
-  config.vm.define "db" do |db|
-        ##  Setup VM
-        ##  Note: can be used with either VMWare or Virtualbox
-        ##  https://www.vaultproject.io/docs/secrets/databases/postgresql.html
-      db.vm.box = "bento/centos-7.5"
-      db.vm.box_version = "201805.15.0"
-      db.vm.hostname = "db"
-      db.vm.network :private_network, ip: "192.168.133.7"
-        ##  Install and run DB
-      db.vm.provision "shell", path: "account.sh", args: "mariadb"
-      db.vm.provision "shell", path: "prereqs.sh"
-      db.vm.provision "shell", path: "mariadb.sh", args: ["errydayimSNUFFLIN", "true", "false"]
-      db.vm.provision "shell", inline: "sudo systemctl enable mariadb.service"
-      db.vm.provision "shell", inline: "sudo systemctl start mariadb"
-  end
-
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
     (5..7).each do |i|
         config.vm.define "instance#{i}" do |server|
+              ##  consul-replicate is optional.
             server.vm.box = "bento/centos-7.5"
             server.vm.box_version = "201805.15.0"
             server.vm.hostname = "instance#{i}"
@@ -46,7 +29,7 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", path: "configureconsul.sh"
             server.vm.provision "shell", path: "vaultdownload.sh", args: "0.10.3"
             server.vm.provision "shell", path: "configurevault.sh"
-            server.vm.provision "shell", path: "consul-replicatedownload.sh", args: "0.4.0"
+            server.vm.provision "shell", path: "demonstrations/consul-replicatedownload.sh", args: "0.4.0"
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
             server.vm.provision "shell", inline: "sudo systemctl enable vault.service"
@@ -106,6 +89,4 @@ Vagrant.configure("2") do |config|
   #   apt-get update
   #   apt-get install -y apache2
   # SHELL
-
-
 end
