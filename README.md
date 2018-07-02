@@ -13,7 +13,7 @@ If you get an error with Vault working improperly, though, make a Github issue A
 
 # OS-Specific Prerequisites
 * MacOS: OSX 10.13 or later  
-* Windows: Windows must have [Powershell 3.0](https://stackoverflow.com/a/32385347/2146138) or later. If you're on Windows 7, I recommend Windows Management Framework 4.0
+* Windows: Windows must have [Powershell 3.0](https://stackoverflow.com/a/32385347/2146138) or later. If you're on Windows 7, I recommend Windows Management Framework 4.0, because it's easier to install
 
 # Vagrant  
 
@@ -30,13 +30,13 @@ _Related Vendor Documentation Link: https://help.github.com/articles/cloning-a-r
 
 ### Use this Code to Make a Vault Cluster  
 
-_Related Vendor Documentation Link: https://www.vagrantup.com/intro/index.html#why-vagrant-_  
+_Related Vagrant Vendor Documentation Link: https://www.vagrantup.com/intro/index.html#why-vagrant-_  
 
 `cd super-duper-vault-train`  
-`vagrant up`  ##  NOTE: You may have to wait a while for this, and there will be some "connection retry" errors for a long time before a successful connection occurs, because the VM is booting.
+`vagrant up`  ##  NOTE: You may have to wait a while for this, and there will be some "connection retry" errors for a long time before a successful connection occurs, because the VM is booting.  Make sure you have the latest version, and try the Vagrant getting started guide, too
 `vagrant status`  
 `vagrant ssh instance5`  
-After you do this, you'll see your command prompt change to show `vagrant`.  
+After you do this, you'll see your command prompt change to show `vagrant@instance5`.  
 You can also `vagrant ssh` to other VMs listed in the output of `vagrant status`.  
 
 You can now use Vault or Consul from within the VM for which you ran `vagrant ssh`.  
