@@ -78,3 +78,7 @@ This will unseal the Vault at `192.168.13.35:8200`.  You can use the same proces
 ```
     curl --request PUT --data '{"key":"efgh910111213..."}' http://192.168.13.35:8200/v1/sys/unseal
 ```
+
+# Non-Vagrant
+
+Please refer to the file PRODUCTION_INSTALLATION.md in this repository.
