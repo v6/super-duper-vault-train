@@ -12,6 +12,8 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
+  ##  Note: can be used with either VMWare or Virtualbox
+  ##  This example uses three boxes. instance5, instance6, and instance7. 
     (5..7).each do |i|
         config.vm.define "instance#{i}" do |server|
               ##  consul-replicate is optional.
@@ -36,6 +38,31 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", inline: "sudo systemctl start vault"
         end
     end
+
+  ##  I have added a variable here in case you want to try out Vault's
+  ##  DB Secret backend.
+  ##  It's false by default.
+  ##  If set to true, Vagrant will add a machine called db when you run vagrant up.
+  db = false
+
+  if db == true
+    config.vm.define "db" do |db|
+          ##  Setup VM for Secret Engine testing:
+          ##  https://www.vaultproject.io/docs/secrets/databases/index.html
+          ##  
+        db.vm.box = "bento/centos-7.5"
+        db.vm.box_version = "201805.15.0"
+        db.vm.hostname = "db"
+        db.vm.network :private_network, ip: "192.168.133.7"
+          ##  Install and run DB
+        db.vm.provision "shell", path: "account.sh", args: "mariadb"
+        db.vm.provision "shell", path: "prereqs.sh"
+        db.vm.provision "shell", path: "mariadb.sh", args: ["errydayimSNUFFLIN", "true", "false"]
+        db.vm.provision "shell", inline: "sudo systemctl enable mariadb.service"
+        db.vm.provision "shell", inline: "sudo systemctl start mariadb"
+    end
+  end
+
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
