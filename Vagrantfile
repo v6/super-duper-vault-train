@@ -31,6 +31,7 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", path: "configureconsul.sh"
             server.vm.provision "shell", path: "vaultdownload.sh", args: "0.10.3"
             server.vm.provision "shell", path: "configurevault.sh"
+            server.vm.provision "shell", path: "unpackplugin.sh", args: "vault-plugin-auth-jwt-linux_amd64.zip"
             server.vm.provision "shell", path: "demonstrations/consul-replicatedownload.sh", args: "0.4.0"
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
@@ -57,7 +58,7 @@ Vagrant.configure("2") do |config|
           ##  Install and run DB
         db.vm.provision "shell", path: "account.sh", args: "mariadb"
         db.vm.provision "shell", path: "prereqs.sh"
-        db.vm.provision "shell", path: "mariadb.sh", args: ["errydayimSNUFFLIN", "true", "false"]
+        db.vm.provision "shell", path: "demonstrations/mariadb.sh", args: ["errydayimSNUFFLIN", "true", "false"]
         db.vm.provision "shell", inline: "sudo systemctl enable mariadb.service"
         db.vm.provision "shell", inline: "sudo systemctl start mariadb"
     end

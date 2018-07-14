@@ -9,6 +9,7 @@ echo "Vault Download: https://releases.hashicorp.com/vault/${1}/vault_${1}_linux
 
 mkdir -p -v -m 0755 /etc/ssl/vault/
 mkdir -p -v -m 755 /etc/vault.d
+mkdir -p -v -m 755 /etc/vault.d/plugin
 chown -R vault:vault /etc/vault.d /etc/ssl/vault
 touch /etc/vault.d/vault.hcl
 chmod -R 0644 /etc/vault.d/*
