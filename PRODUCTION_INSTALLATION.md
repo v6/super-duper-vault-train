@@ -7,6 +7,14 @@
   
   ### Replace Data Center
   Also replace the value for the `"datacenter"` key with the name of your data center, e.g. `eastus`.
+  
+  ##  Separate Consul and Vault
+  
+To install ONLY consul on a server: Don't run the scripts with the word Vault.  
+Just omit scripts with `vault` in the name.  
+
+To install ONLY Vault on a server: There's no need to omit any scripts.  
+But change the consul configuration. Replace `  "server": true,` with `  "server": false,`.
 
   ##  Run Scripts
 
