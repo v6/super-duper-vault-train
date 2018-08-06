@@ -16,14 +16,12 @@ Vagrant.configure("2") do |config|
   ##  This example uses three boxes. instance5, instance6, and instance7. 
     (5..7).each do |i|
         config.vm.define "instance#{i}" do |server|
-              ##  consul-replicate is optional.
             server.vm.box = "bento/centos-7.5"
             server.vm.box_version = "201805.15.0"
             server.vm.hostname = "instance#{i}"
             server.vm.network :private_network, ip: "192.168.13.3#{i}"
             server.vm.provision "shell", path: "account.sh", args: "vault"
             server.vm.provision "shell", path: "account.sh", args: "consul"
-            server.vm.provision "shell", path: "account.sh", args: "consul-replicate"
             server.vm.provision "shell", path: "prereqs.sh"
             server.vm.provision "shell", path: "consulsystemd.sh"
             server.vm.provision "shell", path: "vaultsystemd.sh"
@@ -32,7 +30,6 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", path: "vaultdownload.sh", args: "0.10.3"
             server.vm.provision "shell", path: "configurevault.sh"
             server.vm.provision "shell", path: "unpackplugin.sh", args: "vault-plugin-auth-jwt-linux_amd64.zip"
-            server.vm.provision "shell", path: "demonstrations/consul-replicatedownload.sh", args: "0.4.0"
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
             server.vm.provision "shell", inline: "sudo systemctl enable vault.service"
