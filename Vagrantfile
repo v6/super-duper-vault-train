@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", path: "vaultsystemd.sh"
             server.vm.provision "shell", path: "consuldownload.sh"
             server.vm.provision "shell", path: "configureconsul.sh"
-            server.vm.provision "shell", path: "vaultdownload.sh", args: "0.10.3"
+            server.vm.provision "shell", path: "vaultdownload.sh", args: "0.10.4"
             server.vm.provision "shell", path: "configurevault.sh" 
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
