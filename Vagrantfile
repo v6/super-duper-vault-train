@@ -6,6 +6,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 Vagrant.configure("2") do |config|
+    config.ssh.insert_key = false
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
@@ -41,24 +42,13 @@ Vagrant.configure("2") do |config|
   ##  DB Secret backend.
   ##  It's false by default.
   ##  If set to true, Vagrant will add a machine called db when you run vagrant up.
-  db = false
-
-  if db == true
-    config.vm.define "db" do |db|
-          ##  Setup VM for Secret Engine testing:
-          ##  https://www.vaultproject.io/docs/secrets/databases/index.html
-          ##  
-        db.vm.box = "bento/centos-7.5"
-        db.vm.box_version = "201805.15.0"
-        db.vm.hostname = "db"
-        db.vm.network :private_network, ip: "192.168.133.7"
-          ##  Install and run DB
-        db.vm.provision "shell", path: "account.sh", args: "mariadb"
-        db.vm.provision "shell", path: "prereqs.sh"
-        db.vm.provision "shell", path: "demonstrations/mariadb.sh", args: ["errydayimSNUFFLIN", "true", "false"]
-        db.vm.provision "shell", inline: "sudo systemctl enable mariadb.service"
-        db.vm.provision "shell", inline: "sudo systemctl start mariadb"
-    end
+  config.vm.define "db" do |db|
+    db.vm.box = "bento/centos-7.5"
+    db.vm.box_version = "201805.15.0"
+    db.vm.network :private_network, ip: "192.168.13.187"
+    db.vm.provision "shell", inline: "sudo yum -y install ansible"
+    db.vm.provision "shell", inline: "ansible-playbook /vagrant/playbooks/prereqs.yaml"
+    db.vm.provision "shell", inline: "ansible-playbook /vagrant/playbooks/mariadb.yaml --extra-vars='enable_external_conn=true'"
   end
 
   # Disable automatic box update checking. If you disable this, then

@@ -1,0 +1,48 @@
+---
+- hosts: localhost
+  remote_user: root
+  become: true
+  become_method: sudo
+
+  vars:
+    mysql_root_password: errydayimSNUFFLIN
+    enable_external_conn: false
+    add_root_priv: false
+
+  tasks:
+    - name: Install MariaDB
+      yum: pkg=mariadb-server state=present
+
+    - name: Install the Python MySQL Support Libraries
+      yum: pkg=MySQL-python state=latest
+
+    - name: Start and enable mariadb server
+      service: name=mariadb state=started enabled=true
+
+    - name: Change Mariadb root password
+      mysql_user:
+        name: root
+        host: "{{ ansible_hostname }}"
+        password: "{{ mysql_root_password }}"
+
+    - name: Add Root User Privileges
+      mysql_user:
+        name: root
+        host: "{{ ansible_hostname }}"
+        password: "{{ mysql_root_password }}"
+        check_implicit_admin: yes
+        priv: "*.*:ALL,GRANT"
+      when: add_root_priv
+
+    - name: Creating mariadb config directory
+      file: path=/etc/mysql state=directory
+      when: enable_external_conn
+
+    - name: Allow external connections to MariaDB
+      copy:
+        content: |
+          [mysqld]
+          # Allow external connections to MariaDB
+          bind-address=0.0.0.0
+        dest: /etc/mysql/my.cnf
+      when: enable_external_conn
