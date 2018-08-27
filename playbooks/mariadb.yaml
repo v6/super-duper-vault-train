@@ -22,16 +22,24 @@
     - name: Change Mariadb root password
       mysql_user:
         name: root
-        host: "{{ ansible_hostname }}"
+        host: "{{ item }}"
         password: "{{ mysql_root_password }}"
+      with_items:
+        - "%"
+        - "{{ ansible_hostname }}"
 
     - name: Add Root User Privileges
       mysql_user:
         name: root
-        host: "{{ ansible_hostname }}"
+        host: "{{ item }}"
         password: "{{ mysql_root_password }}"
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
         check_implicit_admin: yes
         priv: "*.*:ALL,GRANT"
+      with_items:
+        - "%"
+        - "{{ ansible_hostname }}"
       when: add_root_priv
 
     - name: Creating mariadb config directory

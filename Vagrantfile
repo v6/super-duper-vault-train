@@ -48,7 +48,8 @@ Vagrant.configure("2") do |config|
     db.vm.network :private_network, ip: "192.168.13.187"
     db.vm.provision "shell", inline: "sudo yum -y install ansible"
     db.vm.provision "shell", inline: "ansible-playbook /vagrant/playbooks/prereqs.yaml"
-    db.vm.provision "shell", inline: "ansible-playbook /vagrant/playbooks/mariadb.yaml --extra-vars='enable_external_conn=true'"
+    db.vm.provision "shell",
+        inline: "ansible-playbook /vagrant/playbooks/mariadb.yaml --extra-vars='enable_external_conn=true add_root_priv=true'"
   end
 
   # Disable automatic box update checking. If you disable this, then
