@@ -4,6 +4,10 @@
   ##  to the docs at the following URL's link result: 
   ##  https://www.consul.io/docs/guides/acl.html#create-tokens-for-ui-use-optional-
 
+  ##  Make sure to set the following environment variables before running this:
+  ##          CONSUL_ADDR
+  ##          CONSUL_HTTP_TOKEN
+
 curl \
     --request PUT \
     --header "X-Consul-Token: ${CONSUL_HTTP_TOKEN}" \
