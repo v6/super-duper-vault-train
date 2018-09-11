@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-  ##  Set an anonymous policy according 
+  ##  Set a Vault policy according 
   ##  to the docs at the following URL's link result: 
   ##  https://www.consul.io/docs/guides/acl.html#create-tokens-for-ui-use-optional-
 
