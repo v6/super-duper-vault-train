@@ -2,7 +2,6 @@
   ##  https://www.vaultproject.io/api/system/auth.html
 
 
-VAULT_ADDR='http://192.168.13.37:8200'
 MOUNT_NAME=$1
 
 
