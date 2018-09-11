@@ -1,3 +1,6 @@
+  ##  Generated Policy Files
+demonstrations/python/*.json
+
   ##  Secrets files
 ldapdemo/secretldap.json*
 demonstrations/ldapdemo/ldap.json
