@@ -4,7 +4,9 @@ import json
 import psycopg2
 import requests
 
-VAULT_URL = 'http://192.168.13.37:8200'
+
+  ##  Make sure the environment variables VAULT_ADDR and VAULT_TOKEN are both set before running this.
+VAULT_URL = os.environ['VAULT_ADDR']
 VAULT_TOKEN = os.environ['VAULT_TOKEN']
 
 def get_from_vault(vault_path='cubbyhole/default'):
