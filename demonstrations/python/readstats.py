@@ -9,6 +9,10 @@ import requests
 VAULT_URL = os.environ['VAULT_ADDR']
 VAULT_TOKEN = os.environ['VAULT_TOKEN']
 
+  ##  Make sure that the PostGRESQL database is running, and provisioned with
+  ##  the password used below, before running this. 
+
+
 def get_from_vault(vault_path='cubbyhole/default'):
     headers = {'X-Vault-Token': VAULT_TOKEN}
     print('  ##  Get a Secret from Vault  ##')
