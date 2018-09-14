@@ -82,3 +82,28 @@ This will unseal the Vault at `192.168.13.35:8200`.  You can use the same proces
 # Non-Vagrant
 
 Please refer to the file PRODUCTION_INSTALLATION.md in this repository.
+
+
+
+# Codified Vault Policies and Configuration
+
+To Provision Vault via its API, please refer to the 
+`provision_vault` folder. 
+
+It has data and scripts. 
+
+The `data` folder's tree corresponds to the HashiCorp Vault API
+endpoints, similar to the following: 
+
+https://www.hashicorp.com/blog/codifying-vault-policies-and-configuration#layout-and-design
+
+You can use the Codified Vault 
+Policies and Configuration 
+with your initial Root token, after
+initializing and unsealing Vault, 
+to configure Vault quickly via its API.
+
+The .json files inside each folder
+correspond to the payloads to send to Vault
+via its API, but there may also be `.hcl`,
+`.sample`, and `.sh` files for convenience's sake.
