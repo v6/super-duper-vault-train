@@ -5,6 +5,8 @@ Accept credentials interactively, and
 use them to authenticate to Vault on
 behalf of a user.
 
+The User Name and Pass Phrase do not touch the disk. 
+
 Preconditions: 
     User knows AD Password and user name.
     User is available for interactive use.
