@@ -11,6 +11,9 @@ bash -c "cat >/etc/consul.d/consul.json" << EOF
   "data_dir": "/opt/consul/data",
   "client_addr": "0.0.0.0",
   "log_level": "INFO",
-  "ui": true
+  "ui": true,
+  "acl_datacenter": "superduper",
+  "acl_default_policy": "allow",
+  "acl_down_policy": "allow"
 }
 EOF
