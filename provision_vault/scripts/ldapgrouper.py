@@ -8,7 +8,7 @@ up to date, or use it as the basis for another
 integration
 
 Usage:
-  ldapgrouper.py --ldap_group <group> --vault_policy <policy>
+  ldapgrouper.py (--ldap_group <group> | --ldap_user <user>) --vault_policy <policy> [<mount_point>]
   ldapgrouper.py list
   ldapgrouper.py goodbye <name>
   ldapgrouper.py (-h | --help)
@@ -27,9 +27,23 @@ import requests
 
 arguments = docopt(__doc__)  ##  Parse the docstring for CLI usage.
 group = arguments['<group>']
+user = arguments['<user>']
 policy = arguments['<policy>']
+policy_list = policy.split()
+mount_point = arguments['<mount_point>']
 
-print ('Linking ' + group + ' to Vault Policy ' + policy)
+VAULT_DEFAULT_TOKEN = os.environ['VAULT_TOKEN']
+VAULT_DEFAULT_URL = os.environ['VAULT_ADDR']
+VAULT_HEADERS=headers = {"X-Vault-Token": os.environ['VAULT_TOKEN']}
+
+if not mount_point: mount_point = 'ldap'
+
+if group: 
+    print ('Linking group ' + group + ' to Vault Policy ' + policy \
+     + ' at Vault Authentication Mount Point ' + mount_point)
+else: 
+    print ('Linking user ' + user + ' to Vault Policy ' + policy \
+     + ' at Vault Authentication Mount Point ' + mount_point)
 
 # Using plaintext
 client = hvac.Client()
@@ -40,21 +54,25 @@ example_payload = {
     "key": "",
 }
 
-VAULT_DEFAULT_TOKEN = os.environ['VAULT_TOKEN']
-VAULT_DEFAULT_URL = os.environ['VAULT_ADDR']
-VAULT_HEADERS=headers = {"X-Vault-Token": os.environ['VAULT_TOKEN']}
-
   ##  LDAP
-
 ldap_client = hvac.Client(url=VAULT_DEFAULT_URL, token=VAULT_DEFAULT_TOKEN)
 assert ldap_client.is_authenticated() # => True
 
+if group:
   ##  Create an LDAP Group Mapping
-
-ldap_client.ldap.create_or_update_group(
-    name=group,
-    policies=[policy]
-)
+    ldap_client.ldap.create_or_update_group(
+        name=group,
+        policies=policy_list,
+        mount_point='ldap'
+    )
+else:
+  ##  Map an LDAP User to a Vault Policy
+    ldap_client.ldap.create_or_update_user(
+        name=user,
+        policies=policy_list, 
+        groups=None, 
+        mount_point='ldap'
+    )
 
   ##  List LDAP Group Mappings
   ##  https://hvac.readthedocs.io/en/latest/usage/auth_methods/ldap.html
