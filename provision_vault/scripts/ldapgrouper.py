@@ -8,7 +8,7 @@ up to date, or use it as the basis for another
 integration
 
 Usage:
-  ldapgrouper.py (--ldap_group <group> | --ldap_user <user>) --vault_policy <policy> [<mount_point>]
+  ldapgrouper.py (--ldap_group <group> | --ldap_user <user>) --vault_policy <policy> [<MOUNT_POINT>]
   ldapgrouper.py list
   ldapgrouper.py goodbye <name>
   ldapgrouper.py (-h | --help)
@@ -25,63 +25,63 @@ from docopt import docopt
 import hvac
 import requests
 
-arguments = docopt(__doc__)  ##  Parse the docstring for CLI usage.
-group = arguments['<group>']
-user = arguments['<user>']
-policy = arguments['<policy>']
-policy_list = policy.split()
-mount_point = arguments['<mount_point>']
+ARGUMENTS = docopt(__doc__)  ##  Parse the docstring for CLI usage.
+GROUP = ARGUMENTS['<group>']
+USER = ARGUMENTS['<user>']
+POLICY = ARGUMENTS['<policy>']
+POLICY_LIST = POLICY.split()
+MOUNT_POINT = ARGUMENTS['<MOUNT_POINT>']
 
 VAULT_DEFAULT_TOKEN = os.environ['VAULT_TOKEN']
 VAULT_DEFAULT_URL = os.environ['VAULT_ADDR']
-VAULT_HEADERS=headers = {"X-Vault-Token": os.environ['VAULT_TOKEN']}
+VAULT_HEADERS = {"X-Vault-Token": os.environ['VAULT_TOKEN']}
 
-if not mount_point: mount_point = 'ldap'
+if not MOUNT_POINT:
+    MOUNT_POINT = 'ldap'
 
-if group: 
-    print ('Linking group ' + group + ' to Vault Policy ' + policy \
-     + ' at Vault Authentication Mount Point ' + mount_point)
-else: 
-    print ('Linking user ' + user + ' to Vault Policy ' + policy \
-     + ' at Vault Authentication Mount Point ' + mount_point)
+if GROUP:
+    print('Linking group ' + GROUP + ' to Vault Policy ' + POLICY \
+     + ' at Vault Authentication Mount Point ' + MOUNT_POINT)
+else:
+    print('Linking user ' + USER + ' to Vault Policy ' + POLICY \
+     + ' at Vault Authentication Mount Point ' + MOUNT_POINT)
 
 # Using plaintext
-client = hvac.Client()
-vault_client_001 = hvac.Client(url='http://localhost:8200')
-client = hvac.Client(url='http://localhost:8200', token=os.environ['VAULT_TOKEN'])
+CLIENT = hvac.Client(url='http://localhost:8200', token=os.environ['VAULT_TOKEN'])
 
-example_payload = {
+EXAMPLE_PAYLOAD = {
     "key": "",
 }
 
   ##  LDAP
-ldap_client = hvac.Client(url=VAULT_DEFAULT_URL, token=VAULT_DEFAULT_TOKEN)
-assert ldap_client.is_authenticated() # => True
+LDAP_CLIENT = hvac.Client(url=VAULT_DEFAULT_URL, token=VAULT_DEFAULT_TOKEN)
+assert LDAP_CLIENT.is_authenticated() # => True
 
-if group:
+if GROUP:
   ##  Create an LDAP Group Mapping
-    ldap_client.ldap.create_or_update_group(
-        name=group,
-        policies=policy_list,
+    LDAP_CLIENT.ldap.create_or_update_group(
+        name=GROUP,
+        policies=POLICY_LIST,
         mount_point='ldap'
     )
 else:
   ##  Map an LDAP User to a Vault Policy
-    ldap_client.ldap.create_or_update_user(
-        name=user,
-        policies=policy_list, 
-        groups=None, 
+    LDAP_CLIENT.ldap.create_or_update_user(
+        username=USER,
+        policies=POLICY_LIST,
+        groups=None,
         mount_point='ldap'
     )
 
   ##  List LDAP Group Mappings
   ##  https://hvac.readthedocs.io/en/latest/usage/auth_methods/ldap.html
-response = requests.get(VAULT_DEFAULT_URL + '/v1/sys/health', headers=VAULT_HEADERS)
-print(json.dumps(json.loads(response.text), indent=4, sort_keys=False))
-ldap_groups = ldap_client.ldap.list_groups()
-print('The following groups are configured in the LDAP auth method: {groups}'.format(groups=','.join(ldap_groups['data']['keys'])))
+RESPONSE = requests.get(VAULT_DEFAULT_URL + '/v1/sys/health', headers=VAULT_HEADERS)
+print(json.dumps(json.loads(RESPONSE.text), indent=4, sort_keys=False))
+LDAP_GROUPS = LDAP_CLIENT.ldap.list_groups()
+print('The following groups are configured in the LDAP auth method:\
+       {groups}'.format(groups=','.join(LDAP_GROUPS['data']['keys'])))
 
   ##  List policies associated with the ldap_groups
-for ldap_group in ldap_groups['data']['keys']: 
+for ldap_group in LDAP_GROUPS['data']['keys']:
     print('  ##  LDAP Group ' + str(ldap_group))
-    print(ldap_client.ldap.read_group(ldap_group, 'ldap')['data']['policies'])
+    print(LDAP_CLIENT.ldap.read_group(ldap_group, 'ldap')['data']['policies'])
