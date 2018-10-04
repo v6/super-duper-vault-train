@@ -5,6 +5,7 @@ demonstrations/python/*.json
 ldapdemo/secretldap.json*
 demonstrations/ldapdemo/ldap.json
 demonstrations/ldapdemo/secretldap.json*
+*_consul_http_token.txt
 
   ##  Vagrant
   ##  https://github.com/hashicorp/vagrant/blob/master/.gitignore

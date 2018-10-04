@@ -17,3 +17,8 @@ bash -c "cat >/etc/consul.d/consul.json" << EOF
   "acl_down_policy": "allow"
 }
 EOF
+
+  ##  Tell the OS to run Consul Snapshot
+  ##  once per hour.
+line="*/60 * * * * /usr/local/bin/consul snapshot save \"/opt/consul/snapshots/consul_snapshot_$(date '+%Y%m%dT%H%M%S').snap\""
+(crontab -u $USER -l; echo "$line" ) | crontab -u $USER -
