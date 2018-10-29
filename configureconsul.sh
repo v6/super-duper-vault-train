@@ -14,7 +14,7 @@ bash -c "cat >/etc/consul.d/consul.json" << EOF
   "ui": true,
   "acl_datacenter": "superduper",
   "acl_default_policy": "allow",
-  "acl_down_policy": "allow"
+  "acl_down_policy": "allow",
   "acl_agent_master_token": "testtoken"
 }
 EOF
