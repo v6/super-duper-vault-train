@@ -1,3 +1,5 @@
+export VAULT_CONSUL_HTTP_TOKEN=$(cat $(ls /vagrant/*vault_consul_http_token.txt | head -n 1))
+echo VAULT_CONSUL_HTTP_TOKEN
 sudo bash -c "cat >/etc/vault.d/vault.hcl" << 'EOF'
 backend "consul" {
   address = "127.0.0.1:8500"
@@ -10,3 +12,6 @@ listener "tcp" {
 plugin_directory = "/etc/vault.d/plugin"
 ui=true
 EOF
+
+sed "s%VAULT_CONSUL_HTTP_TOKEN%${VAULT_CONSUL_HTTP_TOKEN}%" /etc/vault.d/vault.hcl
+sed -i "s%VAULT_CONSUL_HTTP_TOKEN%${VAULT_CONSUL_HTTP_TOKEN}%" /etc/vault.d/vault.hcl
