@@ -17,7 +17,6 @@ Vagrant.configure("2") do |config|
   ##  This example uses three boxes. instance5, instance6, and instance7. 
     (5..7).each do |i|
         config.vm.define "instance#{i}" do |server|
-              ##  consul-replicate is optional.
             server.vm.box = "bento/centos-7.5"
             server.vm.box_version = "201805.15.0"
             server.vm.hostname = "instance#{i}"
@@ -29,28 +28,63 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", path: "vaultsystemd.sh"
             server.vm.provision "shell", path: "consuldownload.sh"
             server.vm.provision "shell", path: "configureconsul.sh"
-            server.vm.provision "shell", path: "vaultdownload.sh", args: "0.11.1"
-            server.vm.provision "shell", path: "configurevault.sh" 
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
-            server.vm.provision "shell", inline: "sudo systemctl enable vault.service"
-            server.vm.provision "shell", inline: "sudo systemctl start vault"
+            server.vm.provision "shell", path: "vaultdownload.sh", args: "0.11.1"
+#            if "#{i}" == "5"
+#                server.vm.provision "shell", inline: "echo 'Provisioning Consul ACLs via this host: '; hostname"
+#                server.vm.provision "shell", path: "provision_consul/scripts/acl/consul_acl.sh"
+#                server.vm.provision "shell", path: "provision_consul/scripts/acl/consul_acl_vault.sh"
+#                else
+#                server.vm.provision "shell", inline: "echo 'Not provisioning Consul ACLs via this host: '; hostname"
+#            end
+            server.vm.provision "shell", inline: "echo oof"
         end
     end
 
-  ##  I have added a variable here in case you want to try out Vault's
-  ##  DB Secret backend.
-  ##  It's false by default.
-  ##  If set to true, Vagrant will add a machine called db when you run vagrant up.
-  config.vm.define "db" do |db|
-    db.vm.box = "bento/centos-7.5"
-    db.vm.box_version = "201805.15.0"
-    db.vm.network :private_network, ip: "192.168.13.187"
-    db.vm.provision "shell", inline: "sudo yum -y install ansible"
-    db.vm.provision "shell", inline: "ansible-playbook /vagrant/playbooks/prereqs.yaml"
-    db.vm.provision "shell",
-        inline: "ansible-playbook /vagrant/playbooks/mariadb.yaml --extra-vars='enable_external_conn=true add_root_priv=true'"
-  end
+
+    config.vm.define "instance7" do |consul_acl|
+#        consul_acl.vm.provision "shell", preserve_order: true, inline: "echo 'Provisioning Consul ACLs via this host: '; hostname"
+#        consul_acl.vm.provision "shell", preserve_order: true, path: "provision_consul/scripts/acl/consul_acl.sh"
+#        consul_acl.vm.provision "shell", preserve_order: true, path: "provision_consul/scripts/acl/consul_acl_vault.sh"
+    end
+
+    (5..7).each do |i|
+        config.vm.define "instance#{i}" do |vault|
+            vault.vm.provision "shell", preserve_order: true, path: "configurevault.sh"
+            vault.vm.provision "shell", preserve_order: true, inline: "sudo systemctl enable vault.service"
+            vault.vm.provision "shell", preserve_order: true, inline: "sudo systemctl start vault"
+        end
+    end
+
+
+  ##  Consul ACL Configuration
+  ##  You'll notice that Consul ACL bootstrapping only succeeds on the first VM.
+  ##  Choice of instance5 is not arbitrary. It could be done from within any instance
+  ##  running one of the members of the Consul cluster, but instance5
+  ##  gets provisioned first.
+
+  ##  Vault's start may only happen after Consul ACL Configuration, because
+  ##  it requires a Consul ACL to exist on a running Consul Cluster.
+
+    (5..7).each do |i|
+        config.vm.define "instance#{i}" do |server|
+            server.vm.provision "shell", inline: "echo 'should run last'; hostname"
+        end
+    end
+
+
+  ##  DB Secret backend
+
+    config.vm.define "db" do |db|
+        db.vm.box = "bento/centos-7.5"
+        db.vm.box_version = "201805.15.0"
+        db.vm.network :private_network, ip: "192.168.13.187"
+        db.vm.provision "shell", inline: "sudo yum -y install ansible"
+        db.vm.provision "shell", inline: "ansible-playbook /vagrant/playbooks/prereqs.yaml"
+        db.vm.provision "shell",
+            inline: "ansible-playbook /vagrant/playbooks/mariadb.yaml --extra-vars='enable_external_conn=true add_root_priv=true'"
+    end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
