@@ -50,6 +50,31 @@ You can now use Vault or Consul from within the VM for which you ran `vagrant ss
 `vault version`  ##  Output should be `Vault v0.10.2 ('3ee0802ed08cb7f4046c2151ec4671a076b76166')`  
 `consul version`  ##  Output should show Consul Agent version and Raft Protocol version
 
+The Vagrant boxes have the following IP addresses: 
+
+    192.168.13.35
+    
+    192.168.13.36
+    
+    192.168.13.37
+
+Vault is on port 8200. 
+
+Consul is on port 8500. 
+
+### Click the Links
+
+http://192.168.13.35:8200 (Vault)
+
+http://192.168.13.35:8500 (Consul)
+
+http://192.168.13.36:8200 (Vault)
+
+http://192.168.13.36:8500 (Consul)
+
+http://192.168.13.37:8200 (Vault)
+
+http://192.168.13.37:8500 (Consul)
 
 ### Start Vault Data  
 
