@@ -1,8 +1,8 @@
   ##  Configures new secret engine mounts and creates new sets of policies, 
   ##  including those for the Vault Application Provisioner Role, 
-  ##  for client apps, e.g. IAM, New Relic, OrderForm, or Nagios
+  ##  for client apps.
   ##  
-  ##  Does not have root or admin access to Production Vault
+  ##  Does not have root or admin access to Vault
   ##  
   ##  Vault Policy file: vault_provisioner.hcl
 
