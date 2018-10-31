@@ -32,7 +32,7 @@ print(testdict)
 
 string_of_json_input = '{"password": "' + pass_phrase + '"}'
 
-vault_auth_method_name = 'ldap-login-method'
+vault_auth_method_name = 'ldap-login-method'  ##  E.g. 'ldap' or 'duomfa'
 
 print (VAULT_ADDR + '/v1/auth/ldap/login' + user_name)
 auth_response = requests.post(VAULT_ADDR + '/v1/auth/' + vault_auth_method_name + '/login/' + user_name, data = string_of_json_input, verify=False)
