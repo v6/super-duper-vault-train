@@ -1,7 +1,9 @@
   ##  Company or Environment specific 
   ##  Provisioning
 provision_vault/data_*
+provision_vault/scripts_*
 provision_consul/data_*
+provision_consul/scripts_*
 
   ##  Generated Policy Files
 demonstrations/python/*.json
