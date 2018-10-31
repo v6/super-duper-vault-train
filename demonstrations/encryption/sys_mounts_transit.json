@@ -1,0 +1,9 @@
+{
+  "type": "transit",
+  "description": "A secrets engine for setting up ways to do Encryption as a Service and Encryption of Data in motion, like encryption keys and services.",
+  "config": {
+    "force_no_cache": false,
+    "max_lease_ttl": "700h",
+    "default_lease_ttl": "350h"
+  }
+}
