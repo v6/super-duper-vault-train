@@ -29,3 +29,26 @@ After running `# account.sh consul-replicate`, you would run the next listed `.s
 Once provisioned using the above instructions, send the Host Names and IP addresses to whoever will own and manage Vault further. 
 
 They'll then use the Vault API to initialize the Vault using `init.sh` and set up a cluster with it. 
+
+
+  ##  Conveniences
+  
+  
+  Here's the content of the /etc/profile.d/vault.sh that I have on my latest Vagrant setup: 
+
+export VAULT_ADDR=http://127.0.0.1:8200  ##  Add local Vault address to startup script
+
+Yours could be this: 
+
+export VAULT_ADDR=http://vaultlb.mycorp.com  ##  Add Vault Load Balancer address to startup script
+
+
+or 
+
+export VAULT_ADDR=https://hostfqdn:8200  ##  Add Vault FQDN address to startup script
+
+Without an environment variable, Vault will default to this: 
+
+https://github.com/hashicorp/vault/blob/934ec9305bd3ef9399894b5c4ba2950f69594c94/api/client.go#L117-L123
+
+Note: The above will affect all users of a Linux system. But if it's just one user, you can update ~/.bash_profile to the same effect. 
