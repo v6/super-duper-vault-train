@@ -1,5 +1,7 @@
 # PostGreSQL Demo
 
+    vagrant up
+
 Create database on the db machine: 
 
     vagrant ssh db
@@ -108,11 +110,34 @@ https://www.tutorialspoint.com/postgresql/postgresql_create_table.htm
 
  # Vault
 
-Now it's time to connect to Vault, using the guide at the following link:
+Now it's time to connect to the Database from one of the Vault servers in this cluster.
+
+Run `vagrant status`: 
+
+     ~/proj/pubvault/duper/demonstrations/database |  (postgres-demo) 👾 vagrant status
+    Current machine states:
+    
+    instance5                 running (virtualbox)
+    instance6                 running (virtualbox)
+    instance7                 running (virtualbox)
+    db                        running (virtualbox)
+    
+    This environment represents multiple VMs. The VMs are all listed
+    above with their current state. For more information about a specific
+    VM, run `vagrant status NAME`.
+    ~/proj/pubvault/duper/demonstrations/database |  (postgres-demo) 👾
+
+Then pick one of the Vault instances, and `vagrant ssh` to it, e.g. `vagrant ssh instance7`: 
+
+    ~/proj/pubvault/duper/demonstrations/database |  (postgres-demo) 👾 vagrant ssh instance7
+    Last login: Fri Nov  2 01:01:35 2018 from 10.0.2.2
+    [vagrant@instance7 ~]$
+
+We can use the guide at the following link:
 
 https://learn.hashicorp.com/vault/secrets-management/sm-dynamic-secrets
 
-Add this policy, make a token from it, and use that token to log in: 
+[Add this policy](https://www.vaultproject.io/docs/concepts/policies.html#creating-policies), make a token from it, and use that token to log in: 
 
 vault_db_engine_admin.hcl
 
