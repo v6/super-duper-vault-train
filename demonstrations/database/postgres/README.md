@@ -10,52 +10,71 @@ Create database on the db machine:
     sudo systemctl start postgresql
     sudo systemctl enable postgresql
     sudo passwd postgres
+
+Now enter the suggested password: 
+
+    r00tp-ssbuckphrase
+
+Now switch users to the `postgres` user: 
+
     su - postgres
 
-Now we need to make the DB allow remote connections: 
 
-https://blog.bigbinary.com/2016/01/23/configure-postgresql-to-allow-remote-connection.html
 
-Next, search for postgresql.conf and edit it as desired. 
+Now we need to make the DB allow remote connections. 
+
+NOTE: 
+
+*If you get stuck or see something broken, you can search for this on Google, or check the following guide: https://blog.bigbinary.com/2016/01/23/configure-postgresql-to-allow-remote-connection.html*
+
+To allow remote connections, search for postgresql.conf. and edit it as desired. 
 
     sudo find / -name "postgresql.conf"
-    vi /var/lib/pgsql/data/postgresql.conf
 
 Add a line to the end: 
 
     echo "listen_addresses = '*'" >> /var/lib/pgsql/data/postgresql.conf
 
-Or replace as follows: 
+Or, if that doesn't work, replace as follows: 
 
     sudo sed -i.bak "s/#listen_addresses = '127.0.0.1'/listen_addresses = '*'/g" /var/lib/pgsql/data/postgresql.conf
 
-Now find and modify pg_hba.conf as desired
+If neither of those works, you can just edit it manually: 
 
-    sudo find / -name "pg_hba.conf"
     vi /var/lib/pgsql/data/postgresql.conf
 
-Follow these instructions:  
-http://www.andrew-kirkpatrick.com/2017/05/allow-connection-postgresql-server-outside-localhost/
+Now find `pg_hba.conf`:
+
+    sudo find / -name "pg_hba.conf"
+    
+Modify it as needed.
+
+    vi /var/lib/pgsql/data/pg_hba.conf
 
 Edit the file to make sure a line like the following exists at the end: 
 
     host    all             all             0.0.0.0/0               md5
 
-Restart PostGreSQL as follows: 
+Here is an example of a possible location for the `pg_hba.conf` file: 
+
+    vi /var/lib/pgsql/data/pg_hba.conf
+
+Follow these instructions:  
+http://www.andrew-kirkpatrick.com/2017/05/allow-connection-postgresql-server-outside-localhost/
+
+Restart PostGreSQL, as follows, because this will pick up the new configuration: 
 
     sudo systemctl restart postgresql
 
-Attempt to connect: 
+Try to connect from the database:
 
     psql -h 192.168.13.187 -U postgres --pass
 
-Suggested password: 
+Enter the suggested passphrase, or whatever one you chose:
 
     r00tp-ssbuckphrase
 
-
-Once you connect, set up a database called testdb
-
+Once you connect, set up a database called testdb.
 
 https://wiki.postgresql.org/wiki/First_steps
 
@@ -92,16 +111,16 @@ Example:
     postgres-#
 
 
-Then create a table called Company
+Then create a master table: 
 
-    postgres=# CREATE TABLE COMPANY(
+    postgres=# CREATE TABLE MASTER(
     postgres(#    ID INT PRIMARY KEY     NOT NULL,
     postgres(#    NAME           TEXT    NOT NULL,
     postgres(#    AGE            INT     NOT NULL,
     postgres(#    ADDRESS        CHAR(50),
     postgres(#    SALARY         REAL
     postgres(# );
-    NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "company_pkey" for table "company"
+    NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index "master_pkey" for table "master"
     CREATE TABLE
     postgres=#
 
@@ -112,9 +131,13 @@ https://www.tutorialspoint.com/postgresql/postgresql_create_table.htm
 
 Now it's time to connect to the Database from one of the Vault servers in this cluster.
 
-Run `vagrant status`: 
+Leave open the shell that you had for accessing the `db` Vagrant. 
 
-     ~/proj/pubvault/duper/demonstrations/database |  (postgres-demo) 👾 vagrant status
+But open a new shell for connecting to one of the `instance#` machines.
+
+After you open a new shell, run `vagrant status` to see the list of Vagrants: 
+
+     (postgres-demo) 👾 vagrant status
     Current machine states:
     
     instance5                 running (virtualbox)
@@ -127,20 +150,54 @@ Run `vagrant status`:
     VM, run `vagrant status NAME`.
     ~/proj/pubvault/duper/demonstrations/database |  (postgres-demo) 👾
 
-Then pick one of the Vault instances, and `vagrant ssh` to it, e.g. `vagrant ssh instance7`: 
+Then pick one of the Vault instances, and `vagrant ssh` to it, e.g. `vagrant ssh instance7` or `vagrant ssh instance5`: 
 
-    ~/proj/pubvault/duper/demonstrations/database |  (postgres-demo) 👾 vagrant ssh instance7
+    (postgres-demo) 👾 vagrant ssh instance7
     Last login: Fri Nov  2 01:01:35 2018 from 10.0.2.2
-    [vagrant@instance7 ~]$
+    [vagrant@instance7 vagrant]$ 
+    
+After you've logged in, check that Vault is pre-installed: 
+    
+    [vagrant@instance7 vagrant]$ vault --version
+    Vault v0.11.1 ('8575f8fedcf8f5a6eb2b4701cb527b99574b5286')
 
-We can use the guide at the following link:
+Now that you are logged in to a VM with `vault` pre-installed, you may use the guide at the following link:
 
 https://learn.hashicorp.com/vault/secrets-management/sm-dynamic-secrets
 
-[Add this policy](https://www.vaultproject.io/docs/concepts/policies.html#creating-policies), make a token from it, and use that token to log in: 
+I recommend taking 5 minutes just to read through some of it, in case you need to refer to it later. 
 
-vault_db_engine_admin.hcl
+But I have modified the guide a bit, to hopefully make it a bit easier. 
 
+For example, in my version of the guide, you don't have to set up TLS. 
+
+To begin, while logged in to the Vagrant VM, navigate to the `/vagrant` directory, and run `ls` to see its contents, with `cd /vagrant; ls`.
+
+You should see output like the following: 
+
+    [vagrant@instance7 vagrant]$ cd /vagrant; ls
+    account.sh          consul_1.3.0_darwin_amd64.zip      consulsystemd.sh  init.sh                                LICENSE        prereqs.sh                  provision_vault  README.md         vaultquiz.md
+    configureconsul.sh  demonstrations    PRODUCTION_INSTALLATION.md  proxy            Vagrantfile       vaultsystemd.sh
+    configurevault.sh   consuldownload.sh                  playbooks      provision_consul            quickunseal.sh   vaultdownload.sh
+    [vagrant@instance7 vagrant]$
+
+Now change directories to the location of the postgres demo: 
+
+    [vagrant@bdload2 vagrant]$ cd demonstrations/database/postgres; ls
+    apps-policy.hcl  postgres.json  README.md  readonly.json  readonly.sql  vault_db_engine_admin.hcl
+    [vagrant@bdload2 postgres]$
+
+The README.md file is the same one you're reading right now. The two `.json` files are payloads for API calls we'll make to Vault later on. The `readonly.sql` file is just for reference, to show the SQL we'll use for generating new DB accounts. 
+
+You should also see two files that are Vault Policies, because they both end with the `.hcl` extension. 
+
+We'll add these two Vault Policies to Vault, using these files. 
+
+[Add this `vault_db_engine_admin` policy](https://www.vaultproject.io/docs/concepts/policies.html#creating-policies), make a token from it, and use that token to log in: 
+
+    vault policy write vault_db_engine_admin vault_db_engine_admin.hcl
+
+Now create a token with that policy: 
 
     vault token create -policy=vault_db_engine_admin
     Key                  Value
@@ -153,28 +210,37 @@ vault_db_engine_admin.hcl
     identity_policies    []
     policies             ["default" "vault_db_engine_admin"]
 
+Now log in with that token. 
 
+Here's an example of using that Vault Token to log in, in ways that work both for the API and for the CLI: 
 
-    vault login e49fd95b-36e5-edd8-535f-588e96b456ab
-    vault write database/config/postgresql plugin_name=postgresql-database-plugin       allowed_roles=readonly connection_url='postgresql://postgres:r00tp-ssbuckphrase@192.168.13.187:5432/testdb?sslmode=disable' verify_connection=false
+    [vagrant@bdload2 postgres]$ export VAULT_DBA_TOKEN=e49fd95b-36e5-edd8-535f-588e96b456ab
+    [vagrant@bdload2 postgres]$ export VAULT_TOKEN=$VAULT_DBA_TOKEN
+    [vagrant@bdload2 postgres]$ vault login e49fd95b-36e5-edd8-535f-588e96b456ab
+    
+Enable the Vault **Database** Secrets Engine: 
+
+    curl --header "X-Vault-Token: ${VAULT_TOKEN}" \
+       --request POST \
+       --data '{"type":"database"}' \
+       https://127.0.0.1:8200/v1/sys/mounts/database
+    
+Now we're going to configure this Vault **Database** Secrets Engine:
+    
+    [vagrant@bdload2 postgres]$ vault write database/config/postgresql plugin_name=postgresql-database-plugin       allowed_roles=readonly connection_url='postgresql://postgres:r00tp-ssbuckphrase@192.168.13.187:5432/testdb?sslmode=disable' verify_connection=false
     WARNING! The following warnings were returned from Vault:
     
       * Password found in connection_url, use a templated url to enable root
       rotation and prevent read access to password information.
+    [vagrant@bdload2 postgres]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST --data @postgres.json     http://127.0.0.1:8200/v1/database/config/postgresql | jq
 
-OR
-    export VAULT_DBA_TOKEN=e49fd95b-36e5-edd8-535f-588e96b456ab
-    export VAULT_TOKEN=$VAULT_DBA_TOKEN
-    curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST --data @postgres.json     http://127.0.0.1:8200/v1/database/config/postgresql | jq
-
-
-Then: 
+Then make an API call to create the Vault Role, named **readonly**, for this Vault **Database** Secrets Engine:
 
     curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST --data @readonly.json "${VAULT_ADDR}/v1/database/roles/readonly"
 
-Now switch to the apps policy.
+Switch to the apps policy: 
 
-    vault token create -policy=apps
+    [vagrant@bdload2 postgres]$ vault token create -policy=apps
     Key                  Value
     ---                  -----
     token                f1642613-cdb0-3a30-c3c2-d688b4353d48
@@ -184,11 +250,12 @@ Now switch to the apps policy.
     token_policies       ["apps-policy" "default"]
     identity_policies    []
     policies             ["apps-policy" "default"]
-    export VAULT_APPS_TOKEN=f1642613-cdb0-3a30-c3c2-d688b4353d48
-    export VAULT_TOKEN=$VAULT_APPS_TOKEN
+    [vagrant@bdload2 postgres]$ export VAULT_APPS_TOKEN=f1642613-cdb0-3a30-c3c2-d688b4353d48
+    [vagrant@bdload2 postgres]$ export VAULT_TOKEN=$VAULT_APPS_TOKEN
 
+Now you have a new Vault Role. You can now use that Vault Role named **readonly** from any VM, to get a new dynamic DB credential, on demand. 
 
-Get a dynamic DB credential: 
+Get a dynamic Database credential from the Vault Role **readonly** in the Vault **Database** Secrets Engine:
 
     [vagrant@instance7 postgres]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}"        --request GET        http://127.0.0.1:8200/v1/database/creds/readonly | jq
       % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
