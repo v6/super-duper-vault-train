@@ -31,13 +31,14 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
             server.vm.provision "shell", path: "vaultdownload.sh", args: "1.0.0-beta1"
-#            if "#{i}" == "5"
-#                server.vm.provision "shell", inline: "echo 'Provisioning Consul ACLs via this host: '; hostname"
-#                server.vm.provision "shell", path: "provision_consul/scripts/acl/consul_acl.sh"
-#                server.vm.provision "shell", path: "provision_consul/scripts/acl/consul_acl_vault.sh"
-#                else
-#                server.vm.provision "shell", inline: "echo 'Not provisioning Consul ACLs via this host: '; hostname"
-#            end
+            if "#{i}" == "7"
+                server.vm.provision "shell", inline: "consul members; curl localhost:8500/v1/catalog/nodes ; sleep 15"
+                server.vm.provision "shell", inline: "echo 'Provisioning Consul ACLs via this host: '; hostname"
+                server.vm.provision "shell", path: "provision_consul/scripts/acl/consul_acl.sh"
+                server.vm.provision "shell", path: "provision_consul/scripts/acl/consul_acl_vault.sh"
+                else
+                server.vm.provision "shell", inline: "echo 'Not provisioning Consul ACLs via this host: '; hostname"
+            end
             server.vm.provision "shell", inline: "echo oof"
         end
     end
