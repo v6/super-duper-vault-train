@@ -1,0 +1,11 @@
+{
+    "db_name": "mariadb",
+    "plugin_name": "mysql-database-plugin",
+    "allowed_roles": "readonly",
+    "connection_url": "{{username}}:{{password}}@(192.168.13.187:3306)/",
+    "max_open_connections": 5,
+    "max_connection_lifetime": "30s",
+    "username": "root",
+    "password": "errydayimSNUFFLIN",
+    "verify_connection": false
+}
