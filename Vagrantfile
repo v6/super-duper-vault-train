@@ -81,6 +81,7 @@ Vagrant.configure("2") do |config|
         db.vm.box = "bento/centos-7.5"
         db.vm.box_version = "201805.15.0"
         db.vm.network :private_network, ip: "192.168.13.187"
+        db.vm.provision "shell", path: "configuremariadb.sh"
         db.vm.provision "shell", inline: "sudo yum -y install ansible"
         db.vm.provision "shell", inline: "ansible-playbook /vagrant/playbooks/prereqs.yaml"
         db.vm.provision "shell",
