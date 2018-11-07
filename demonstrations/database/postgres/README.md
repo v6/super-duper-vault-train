@@ -352,3 +352,9 @@ On your vagrant ssh session to the vagrant VM named db:
     }
     
     postgres=#
+
+# Rotate the root credentials
+
+Switch back to the DB Secrets Engine Admin policy. 
+
+    vault write -force database/rotate-root/postgres
