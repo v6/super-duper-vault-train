@@ -412,3 +412,13 @@ On your vagrant ssh session to the vagrant VM named db:
     }
     
     postgres=#
+
+
+# Rotate the Root Passphrase
+
+We're going to have Vault rotate the  
+passphrase without telling us what it is, because  
+it's probably not a good idea to leave a  
+pass phrase the same as the contents of a JSON payload or CLI input. 
+
+    vault write -force mariadb/rotate-root/mariadb
