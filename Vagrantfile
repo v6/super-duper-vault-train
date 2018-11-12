@@ -31,6 +31,9 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
             server.vm.provision "shell", path: "vaultdownload.sh", args: "1.0.0-beta1"
+            server.vm.provision "shell", inline: "sudo vault -autocomplete-install"
+            server.vm.provision "shell", inline: "vault -autocomplete-install"
+            
               ##  API Provisioning
             if "#{i}" == "7"
                 server.vm.provision "shell", inline: "consul members; curl localhost:8500/v1/catalog/nodes ; sleep 15"
