@@ -29,7 +29,10 @@ ARGUMENTS = docopt(__doc__)  ##  Parse the docstring for CLI usage.
 GROUP = ARGUMENTS['<group>']
 USER = ARGUMENTS['<user>']
 POLICY = ARGUMENTS['<policy>']
-POLICY_LIST = POLICY.split()
+if POLICY: 
+    POLICY_LIST = POLICY.split()
+else: 
+    print ("No Policy Defined, listing policies and such")
 MOUNT_POINT = ARGUMENTS['<MOUNT_POINT>']
 
 VAULT_DEFAULT_TOKEN = os.environ['VAULT_TOKEN']
@@ -42,9 +45,11 @@ if not MOUNT_POINT:
 if GROUP:
     print('Linking group ' + GROUP + ' to Vault Policy ' + POLICY \
      + ' at Vault Authentication Mount Point ' + MOUNT_POINT)
-else:
+elif USER:
     print('Linking user ' + USER + ' to Vault Policy ' + POLICY \
      + ' at Vault Authentication Mount Point ' + MOUNT_POINT)
+else: 
+    print ('No USER or GROUP defined, listing info.')
 
 # Using plaintext
 CLIENT = hvac.Client(url='http://localhost:8200', token=os.environ['VAULT_TOKEN'])
@@ -64,7 +69,7 @@ if GROUP:
         policies=POLICY_LIST,
         mount_point='ldap'
     )
-else:
+elif USER:
   ##  Map an LDAP User to a Vault Policy
     LDAP_CLIENT.ldap.create_or_update_user(
         username=USER,
@@ -72,6 +77,8 @@ else:
         groups=None,
         mount_point='ldap'
     )
+else: 
+    print ('No USER or GROUP defined, listing info.')
 
   ##  List LDAP Group Mappings
   ##  https://hvac.readthedocs.io/en/latest/usage/auth_methods/ldap.html
