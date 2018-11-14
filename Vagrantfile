@@ -31,7 +31,6 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
             server.vm.provision "shell", path: "vaultdownload.sh", args: ["1.0.0-beta1", "/usr/local/bin"]
-            server.vm.provision "shell", inline: "/usr/local/bin/vault -autocomplete-install"
             
               ##  API Provisioning
             if "#{i}" == "7"
