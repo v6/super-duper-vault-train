@@ -11,7 +11,7 @@
 VAULT_FOLDER_PREFIX=$1
 echo "  ##  Using VAULT_ADDR=${VAULT_ADDR}"
 echo "  ##  Using prefix ${VAULT_FOLDER_PREFIX}"
-VAULT_AUDIT_FILE_PATH="${VAULT_FOLDER_PREFIX}/var/log/vault/audit.log"
+VAULT_AUDIT_FILE_PATH="${VAULT_FOLDER_PREFIX}/var/log/vault_audit.log"
 
 curl \
     --header "X-Vault-Token: ${VAULT_TOKEN}" \
