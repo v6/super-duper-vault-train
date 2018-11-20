@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
             server.vm.provision "shell", path: "configureconsul.sh"
             server.vm.provision "shell", inline: "sudo systemctl enable consul.service"
             server.vm.provision "shell", inline: "sudo systemctl start consul"
-            server.vm.provision "shell", path: "vaultdownload.sh", args: ["1.0.0-beta1", "/usr/local/bin"]
+            server.vm.provision "shell", path: "vaultdownload.sh", args: ["1.0.0-rc1", "/usr/local/bin"]
             
               ##  API Provisioning
             if "#{i}" == "7"
@@ -69,13 +69,6 @@ Vagrant.configure("2") do |config|
 
   ##  Vault's start may only happen after Consul ACL Configuration, because
   ##  it requires a Consul ACL to exist on a running Consul Cluster.
-
-    (5..7).each do |i|
-        config.vm.define "instance#{i}" do |server|
-            server.vm.provision "shell", inline: "echo 'should run last'; hostname"
-        end
-    end
-
 
   ##  DB Secret backend
 

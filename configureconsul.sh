@@ -13,9 +13,10 @@ bash -c "cat >/etc/consul.d/consul.json" << EOF
   "log_level": "INFO",
   "ui": true,
   "acl_datacenter": "superduper",
-  "acl_default_policy": "allow",
+  "acl_default_policy": "deny",
   "acl_down_policy": "allow",
-  "acl_agent_master_token": "testtoken"
+  "acl_agent_master_token": "testtoken",
+  "acl_master_token":"a4c878e5-a0eb-48ef-b6b4-00e18a146bf2"
 }
 EOF
 
