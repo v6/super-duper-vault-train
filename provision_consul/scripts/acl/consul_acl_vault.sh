@@ -13,7 +13,8 @@ echo "   ##  Make sure to set the following environment variables before running
   ##          CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN}"
 
 export CONSUL_ADDR='http://127.0.0.1:8500'
-CONSUL_HTTP_TOKEN=$(tac "/vagrant/${HOSTNAME}_consul_http_token.txt" | egrep -m 1 .)
+#CONSUL_HTTP_TOKEN=$(tac "/vagrant/${HOSTNAME}_consul_http_token.txt" | egrep -m 1 .)
+CONSUL_HTTP_TOKEN=a4c878e5-a0eb-48ef-b6b4-00e18a146bf2
 export CONSUL_HTTP_TOKEN
 echo "CONSUL_HTTP_TOKEN=${CONSUL_HTTP_TOKEN}"
 echo "CONSUL_ADDR=${CONSUL_ADDR}"
