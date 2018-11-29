@@ -1,0 +1,147 @@
+~/duper/demonstrations/templates |  (develop-templates) 👾 vagrant up
+Bringing machine 'instance5' up with 'virtualbox' provider...
+Bringing machine 'instance6' up with 'virtualbox' provider...
+Bringing machine 'instance7' up with 'virtualbox' provider...
+Bringing machine 'db' up with 'virtualbox' provider...
+==> instance5: Checking if box 'bento/centos-7.5' is up to date...
+==> instance5: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==> instance5: flag to force provisioning. Provisioners marked to run always will still run.
+==> instance6: Checking if box 'bento/centos-7.5' is up to date...
+==> instance6: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==> instance6: flag to force provisioning. Provisioners marked to run always will still run.
+==> instance7: Checking if box 'bento/centos-7.5' is up to date...
+==> instance7: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==> instance7: flag to force provisioning. Provisioners marked to run always will still run.
+==> db: Checking if box 'bento/centos-7.5' is up to date...
+==> db: Machine already provisioned. Run `vagrant provision` or use the `--provision`
+==> db: flag to force provisioning. Provisioners marked to run always will still run.
+~/duper/demonstrations/templates |  (develop-templates) 👾 vagrant status
+Current machine states:
+
+instance5                 running (virtualbox)
+instance6                 running (virtualbox)
+instance7                 running (virtualbox)
+db                        running (virtualbox)
+
+This environment represents multiple VMs. The VMs are all listed
+above with their current state. For more information about a specific
+VM, run `vagrant status NAME`.
+~/duper/demonstrations/templates |  (develop-templates) 👾 ls
+README.md		accessor.txt		entity_id.txt		group-template.hcl	group-tmpl.hcl		group_id.txt		user-template.hcl	user-tmpl.hcl
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault policy write user-tmpl user-tmpl.hcl
+Success! Uploaded policy: user-tmpl
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault policy write group-tmpl group-tmpl.hcl
+Success! Uploaded policy: group-tmpl
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault auth enable userpass
+Success! Enabled userpass auth method at: userpass/
+~/duper/demonstrations/templates |  (develop-templates) 👾 wget https://learn.hashicorp.com/assets/images/vault-acl-templating.png
+--2018-11-26 14:03:59--  https://learn.hashicorp.com/assets/images/vault-acl-templating.png
+Resolving learn.hashicorp.com (learn.hashicorp.com)... 184.72.215.16
+Connecting to learn.hashicorp.com (learn.hashicorp.com)|184.72.215.16|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 77558 (76K) [image/png]
+Saving to: ‘vault-acl-templating.png’
+
+vault-acl-templating.png                           100%[================================================================================================================>]  75.74K   463KB/s    in 0.2s
+
+2018-11-26 14:04:00 (463 KB/s) - ‘vault-acl-templating.png’ saved [77558/77558]
+
+~/duper/demonstrations/templates |  (develop-templates) 👾 ls
+README.md			entity_id.txt			group-tmpl.hcl			user-template.hcl		vault-acl-templating.png
+accessor.txt			group-template.hcl		group_id.txt			user-tmpl.hcl
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault write auth/userpass/users/bob password="training"
+Success! Data written to: auth/userpass/users/bob
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Retrieve the userpass mount accessor and save it in a file named, accessor.txt
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault auth list -format=json | jq -r '.["userpass/"].accessor' > accessor.txt
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Create bob_smith entity and save the identity ID in the entity_id.txt
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault write -format=json identity/entity name="bob_smith" policies="user-tmpl" \
+ 🔪         | jq -r ".data.id" > entity_id.txt
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Add an entity alias for the bob_smith entity
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault write identity/entity-alias name="bob" \
+ 🔪        canonical_id=$(cat entity_id.txt) \
+ 🔪        mount_accessor=$(cat accessor.txt)
+Key             Value
+---             -----
+canonical_id    77231e5b-2b4e-4231-bb1b-f46667e3e030
+id              fec6eb83-a696-3f5a-e675-8d3837b0333e
+~/duper/demonstrations/templates |  (develop-templates) 👾
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Finally, create education group and add bob_smith entity as a member
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Save the generated group ID in the group_id.txt file
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault write -format=json identity/group name="education" \
+ 🔪       policies="group-tmpl" \
+ 🔪       metadata=region="us-west" \
+ 🔪       member_entity_ids=$(cat entity_id.txt)  \
+ 🔪       | jq -r ".data.id" > group_id.txt
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault secrets enable -path=user-kv kv-v2
+Success! Enabled the kv-v2 secrets engine at: user-kv/
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Enable key/value v2 secrets engine at user-kv and group-kv paths.
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault secrets enable -path=group-kv kv-v2
+Success! Enabled the kv-v2 secrets engine at: group-kv/
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault login -method=userpass username="bob" password="training"
+WARNING! The VAULT_TOKEN environment variable is set! This takes precedence
+over the value set by this command. To use the value set by this command,
+unset the VAULT_TOKEN environment variable or set it to the token displayed
+below.
+
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                    Value
+---                    -----
+token                  s.700ZlMB0KLvH9iPP2UadyT68
+token_accessor         8JHcMxCMHUAcNhR866j3Xhqo
+token_duration         768h
+token_renewable        true
+token_policies         ["default"]
+identity_policies      ["group-tmpl" "user-tmpl"]
+policies               ["default" "group-tmpl" "user-tmpl"]
+  // , Add stuff for Policy Templating tests
+token_meta_username    bob
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Remember that bob is a member of the bob_smith entity; therefore, the "user-kv/data/{{identity.entity.name}}/*" expression in the user-tmpl policy translates to "user-kv/data/bob_smith/*". Let's test!
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault kv put user-kv/bob_smith/apikey webapp="12344567890"
+Key              Value
+---              -----
+created_time     2018-11-26T22:06:34.445199671Z
+deletion_time    n/a
+destroyed        false
+version          1
+~/duper/demonstrations/templates |  (develop-templates) 👾 # The region was set to us-west for the education group that the bob_smith belongs to.
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Therefore, the "group-kv/data/education/{{identity.groups.names.education.metadata.region}}/*" expression in the group-tmpl policy translates to "group-kv/data/education/us-west/*". Let's verify.
+~/duper/demonstrations/templates |  (develop-templates) 👾
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault kv put group-kv/education/us-west/db_cred password="ABCDEFGHIJKLMN"
+Key              Value
+---              -----
+created_time     2018-11-26T22:06:59.916750601Z
+deletion_time    n/a
+destroyed        false
+version          1
+~/duper/demonstrations/templates |  (develop-templates) 👾
+~/duper/demonstrations/templates |  (develop-templates) 👾
+~/duper/demonstrations/templates |  (develop-templates) 👾 # Verify that you can update the group information. The group-tmpl policy permits "update" and "read" on the "identity/group/id/{{identity.groups.names.education.id}}" path. In Step 2, you saved the education group ID in the group_id.txt file.
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault write identity/group/id/$(cat group_id.txt) \
+ 🔪         policies="group-tmpl" \
+ 🔪         metadata=region="us-west" \
+ 🔪         metadata=contact_email="james@example.com"
+Success! Data written to: identity/group/id/1c756d60-ee2a-2c96-53a7-bfce8324b6c4
+~/duper/demonstrations/templates |  (develop-templates) 👾 cat group_id.txt
+1c756d60-ee2a-2c96-53a7-bfce8324b6c4
+~/duper/demonstrations/templates |  (develop-templates) 👾 vault read identity/group/id/$(cat group_id.txt)
+Key                  Value
+---                  -----
+alias                map[]
+creation_time        2018-11-26T22:05:20.9221622Z
+id                   1c756d60-ee2a-2c96-53a7-bfce8324b6c4
+last_update_time     2018-11-26T22:07:16.12348153Z
+member_entity_ids    [77231e5b-2b4e-4231-bb1b-f46667e3e030]
+member_group_ids     <nil>
+metadata             map[contact_email:james@example.com region:us-west]
+modify_index         2
+name                 education
+parent_group_ids     <nil>
+policies             [group-tmpl]
+type                 internal
+~/duper/demonstrations/templates |  (develop-templates) 👾 ls
+README.md			entity_id.txt			group-tmpl.hcl			user-template.hcl		vault-acl-templating.png
+accessor.txt			group-template.hcl		group_id.txt			user-tmpl.hcl
+~/duper/demonstrations/templates |  (develop-templates) 👾
