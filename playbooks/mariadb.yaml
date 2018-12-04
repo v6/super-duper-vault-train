@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: all
   remote_user: root
   become: true
   become_method: sudo
@@ -27,6 +27,7 @@
       with_items:
         - "%"
         - "{{ ansible_hostname }}"
+      when: add_root_priv
 
     - name: Add Root User Privileges
       mysql_user:

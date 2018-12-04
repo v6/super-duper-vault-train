@@ -1,5 +1,5 @@
 ---
-- hosts: localhost
+- hosts: all
   remote_user: root
   become: true
   become_method: sudo
@@ -8,5 +8,5 @@
     - name: Install jq
       get_url:
         url: https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64
-        dest: /etc/foo.conf
-        mode: 0764
+        dest: /usr/local/bin/jq
+        mode: 0755
