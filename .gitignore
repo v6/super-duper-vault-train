@@ -1,3 +1,6 @@
+  ##  Compressed binaries
+*.zip
+
   ##  Company or Environment specific 
   ##  Provisioning
 provision_vault/data_*
