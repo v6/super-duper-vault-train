@@ -89,3 +89,8 @@ path "limitednamespace/sys/policy/*"
 {
   capabilities = ["deny"]
 }
+
+path "limitednamespace/sys/namespaces*"
+{
+  capabilities = ["deny"]
+}
