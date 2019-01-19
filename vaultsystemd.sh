@@ -10,7 +10,7 @@ After=consul-online.target
 Restart=on-failure
 PermissionsStartOnly=true
 ExecStartPre=/sbin/setcap 'cap_ipc_lock=+ep' /usr/local/bin/vault
-ExecStart=/usr/local/bin/vault server -config /etc/vault.d
+ExecStart=/bin/env VAULT_UI=true /usr/local/bin/vault server -config /etc/vault.d
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 User=vault
