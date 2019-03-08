@@ -22,7 +22,7 @@
 
 path "auth/*"
 {
-  capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+  capabilities = ["create", "read", "update", "delete", "list"]
 }
  
 path "sys/auth/*"
