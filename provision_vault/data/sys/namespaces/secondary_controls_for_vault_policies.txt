@@ -1,0 +1,8 @@
+Secondary Controls  
+ - The user could give standardized policies to application or environment owners with namespaces. 
+
+ - And a log aggregation service like Elastic or Splunk or something else can notify the user,
+   to give the option to review in case that policy is authorizing some sensitive watchlist of API resource paths.
+
+ - This would give a way to _watch_ namespaces for unexpected behavior, while still gaining
+   the self-service benefits. 
