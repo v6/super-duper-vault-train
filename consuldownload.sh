@@ -1,5 +1,5 @@
-release="$(curl -s https://releases.hashicorp.com/consul/index.json|jq -r '.versions[].version'|grep -v 'beta\|rc'|tail -n 1)"
-release="$(curl -s https://releases.hashicorp.com/consul/index.json|jq -r '.versions[].version'|tail -n 1)"
+release="$(curl -s https://releases.hashicorp.com/consul/index.json|jq -r '.versions[].version'|grep -v 'ent\|rc\|beta'|tail -n 1)"
+#release="$(curl -s https://releases.hashicorp.com/consul/index.json|jq -r '.versions[].version'|tail -n 1)"
 download="https://releases.hashicorp.com/consul/${release}/consul_${release}_linux_amd64.zip"
 echo "Consul Release: ${release}"
 echo "Consul Download: ${download}"
