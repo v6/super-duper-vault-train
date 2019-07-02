@@ -232,7 +232,7 @@ Now we're going to configure this Vault **Database** Secrets Engine:
     
       * Password found in connection_url, use a templated url to enable root
       rotation and prevent read access to password information.
-    [vagrant@bdload2 postgres]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST --data @postgres.json     http://127.0.0.1:8200/v1/database/config/postgresql | jq
+    [vagrant@bdload2 postgres]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST --data @postgres.json     https://127.0.0.1:8200/v1/database/config/postgresql | jq
 
 Then make an API call to create the Vault Role, named **readonly**, for this Vault **Database** Secrets Engine:
 
@@ -257,7 +257,7 @@ Now you have a new Vault Role. You can now use that Vault Role named **readonly*
 
 Get a dynamic Database credential from the Vault Role **readonly** in the Vault **Database** Secrets Engine:
 
-    [vagrant@instance7 postgres]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}"        --request GET        http://127.0.0.1:8200/v1/database/creds/readonly | jq
+    [vagrant@instance7 postgres]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}"        --request GET        https://127.0.0.1:8200/v1/database/creds/readonly | jq
       % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                      Dload  Upload   Total   Spent    Left  Speed
     100   317  100   317    0     0  13534      0 --:--:-- --:--:-- --:--:-- 13782

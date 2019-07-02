@@ -1,0 +1,6 @@
+  ##  Ignore TLS artifacts
+*.key
+*.crt
+*.conf
+*.info
+*.pem

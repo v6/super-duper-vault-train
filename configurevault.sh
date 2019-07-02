@@ -8,8 +8,12 @@ backend "consul" {
 }
 listener "tcp" {
   address     = "0.0.0.0:8200"
-  tls_disable = 1
+  # tls_disable = 1
+  tls_disable = 0
+  tls_cert_file = "/etc/vault.d/tls/vault.crt"
+  tls_key_file  = "/etc/vault.d/tls/vault.key"
 }
+api_addr = "https://192.168.13.35:8200"
 plugin_directory = "/etc/vault.d/plugin"
 ui=true
 EOF
@@ -18,3 +22,4 @@ echo "sed without -i"
 sed "s%VAULT_CONSUL_HTTP_TOKEN%${VAULT_CONSUL_HTTP_TOKEN}%" "/etc/vault.d/vault.hcl"
 echo "sed -i"
 sed -i "s%VAULT_CONSUL_HTTP_TOKEN%${VAULT_CONSUL_HTTP_TOKEN}%" "/etc/vault.d/vault.hcl"
+

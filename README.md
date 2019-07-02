@@ -64,15 +64,20 @@ Consul is on port 8500.
 
 ### Click the Links
 
-http://192.168.13.35:8200 (Vault)
+NOTE: You will need to tell
+your browser to trust the Certificates
+generated during the provisioning
+process. 
+
+https://192.168.13.35:8200 (Vault)
 
 http://192.168.13.35:8500 (Consul)
 
-http://192.168.13.36:8200 (Vault)
+https://192.168.13.36:8200 (Vault)
 
 http://192.168.13.36:8500 (Consul)
 
-http://192.168.13.37:8200 (Vault)
+https://192.168.13.37:8200 (Vault)
 
 http://192.168.13.37:8500 (Consul)
 
@@ -83,7 +88,7 @@ _Related Vendor Documentation Link: https://www.vaultproject.io/api/system/init.
 Start Vault.  
 Run this command on one of the Vagrant-managed VMs, or somewhere on your computer that has `curl` installed.  
 ```
-    curl -s --request PUT -d '{"secret_shares": 3,"secret_threshold": 2}' http://192.168.13.35:8200/v1/sys/init
+    curl -s --request PUT -d '{"secret_shares": 3,"secret_threshold": 2}' https://192.168.13.35:8200/v1/sys/init
 ```
 
 ### Unseal Vault  
@@ -95,20 +100,25 @@ This will unseal the Vault at `192.168.13.35:8200`.  You can use the same proces
 1. Use your unseal key to replace the value for key `abcd1430890...`, and run this on the Vagrant-managed VM.  
 
 ```
-    curl --request PUT --data '{"key":"abcd12345678..."}' http://192.168.13.35:8200/v1/sys/unseal
+    curl --request PUT --data '{"key":"abcd12345678..."}' https://192.168.13.35:8200/v1/sys/unseal
 ```
 
 2. Run that `curl` command again. But use a different value for `"key":`. Replace `efgh2541901...` with a different key than you used in the previous step, from the keys you received when running the `v1/sys/init` endpoint.  
 
 ```
-    curl --request PUT --data '{"key":"efgh910111213..."}' http://192.168.13.35:8200/v1/sys/unseal
+    curl --request PUT --data '{"key":"efgh910111213..."}' https://192.168.13.35:8200/v1/sys/unseal
 ```
 
 # Non-Vagrant
 
-Please refer to the file PRODUCTION_INSTALLATION.md in this repository.
+Please refer to the file `PRODUCTION_INSTALLATION.md` in this repository.
 
+# Certificates
 
+Vagrant generates some self-signed certificates for each
+Vault node. 
+
+Please refer to the `README.md` file in this repository, inside the `certs` folder.
 
 # Codified Vault Policies and Configuration
 

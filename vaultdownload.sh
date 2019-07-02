@@ -17,8 +17,9 @@ echo "Vault Download: https://releases.hashicorp.com/vault/${1}/vault_${1}_linux
 echo "Vault Path: ${2}"
 
 mkdir -p -v -m 0755 "${VAULT_FOLDER_PREFIX}/etc/ssl/vault/"
-mkdir -p -v -m 755 "${VAULT_FOLDER_PREFIX}/etc/vault.d"
-mkdir -p -v -m 755 "${VAULT_FOLDER_PREFIX}/etc/vault.d/plugin"
+mkdir -p -v -m 755 "${VAULT_FOLDER_PREFIX}/etc/vault.d/"
+mkdir -p -v -m 755 "${VAULT_FOLDER_PREFIX}/etc/vault.d/tls/"
+mkdir -p -v -m 755 "${VAULT_FOLDER_PREFIX}/etc/vault.d/plugin/"
 chown -R vault:vault "${VAULT_FOLDER_PREFIX}/etc/vault.d" "${VAULT_FOLDER_PREFIX}/etc/ssl/vault"
 touch "${VAULT_FOLDER_PREFIX}/etc/vault.d/vault.hcl"
 chmod -R 0644 $VAULT_FOLDER_PREFIX/etc/vault.d/*
