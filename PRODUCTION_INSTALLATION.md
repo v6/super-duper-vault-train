@@ -36,11 +36,11 @@ They'll then use the Vault API to initialize the Vault using `init.sh` and set u
   
   Here's the content of the /etc/profile.d/vault.sh that I have on my latest Vagrant setup: 
 
-export VAULT_ADDR=http://127.0.0.1:8200  ##  Add local Vault address to startup script
+export VAULT_ADDR=https://127.0.0.1:8200  ##  Add local Vault address to startup script
 
 Yours could be this: 
 
-export VAULT_ADDR=http://vaultlb.mycorp.com  ##  Add Vault Load Balancer address to startup script
+export VAULT_ADDR=https://vaultlb.mycorp.com  ##  Add Vault Load Balancer address to startup script
 
 
 or 

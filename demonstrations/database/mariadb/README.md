@@ -195,7 +195,7 @@ OR
         "password": "errydayimSNUFFLIN",
         "verify_connection": false
     }
-    [vagrant@instance7 mariadb]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST --data @mariadb.json     http://127.0.0.1:8200/v1/database/config/mariadb | jq
+    [vagrant@instance7 mariadb]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST --data @mariadb.json     https://127.0.0.1:8200/v1/database/config/mariadb | jq
       % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                      Dload  Upload   Total   Spent    Left  Speed
     100   505  100   162  100   343  15841  33541 --:--:-- --:--:-- --:--:-- 34300
@@ -242,7 +242,7 @@ Example Output:
     >     --header "X-Vault-Token: ${VAULT_TOKEN}" \
     >     --request POST \
     >     --data @enable_mariadb_secrets_engine.json \
-    >     http://127.0.0.1:8200/v1/sys/mounts/mariadb
+    >     https://127.0.0.1:8200/v1/sys/mounts/mariadb
     [vagrant@instance7 mariadb]$ curl -sk \
     >     --header "X-Vault-Token: ${VAULT_TOKEN}" \
     >     "${VAULT_ADDR}/v1/sys/mounts/mariadb/tune" | jq
@@ -269,11 +269,11 @@ Then:
  # Configure MariaDB Mount
 
     curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST --data @mariadb.json \
-    http://127.0.0.1:8200/v1/mariadb/config/mariadb
+    https://127.0.0.1:8200/v1/mariadb/config/mariadb
 
 Example: 
 
-    [vagrant@instance7 mariadb]$ curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST --data @mariadb.json     http://127.0.0.1:8200/v1/mariadb/config/mariadb
+    [vagrant@instance7 mariadb]$ curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST --data @mariadb.json     https://127.0.0.1:8200/v1/mariadb/config/mariadb
     {"request_id":"93aee9eb-34e4-2220-e330-9400ccb8efd6","lease_id":"","renewable":false,"lease_duration":0,"data":null,"wrap_info":null,"warnings":null,"auth":null}
     [vagrant@instance7 mariadb]$
 
@@ -317,7 +317,7 @@ Now switch to the apps policy.
 
 Get a dynamic DB credential: 
 
-    [vagrant@instance7 mariadb]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}"        --request GET        http://127.0.0.1:8200/v1/mariadb/creds/readonly | jq
+    [vagrant@instance7 mariadb]$ curl --header "X-Vault-Token: ${VAULT_TOKEN}"        --request GET        https://127.0.0.1:8200/v1/mariadb/creds/readonly | jq
       % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                      Dload  Upload   Total   Spent    Left  Speed
     100   300  100   300    0     0  13280      0 --:--:-- --:--:-- --:--:-- 13636
